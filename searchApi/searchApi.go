@@ -38,13 +38,6 @@ type AppleSearchAppInfo struct {
 	IosUrl string `json:"trackViewUrl"`
 }
 
-// This type holds required informations for returning from SearchApp function for each result entry
-type SearchResult struct {
-	IosId         int64
-	Name          string
-	IosBundleName string
-}
-
 func SearchApp(resChan chan []AppleSearchAppInfo, criteria string) {
 	resChan <- searchApple(criteria)
 }
