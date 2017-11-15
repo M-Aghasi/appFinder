@@ -10,11 +10,13 @@ import (
 	"strconv"
 	"strings"
 	"time"
+	"os"
 
 	"github.com/go-redis/redis"
 	"gopkg.in/telegram-bot-api.v4"
 )
 
+const LOG_FILE string = "/var/log/AppFinder_telegram_bot.log"
 const BOT_TOKEN string = "TELEGRAM_BOT_TOKEN"
 const REDIS_CACHE_EXPIRE_SECS int = 60 * 60 * 3
 
@@ -22,6 +24,13 @@ var redisClient *redis.Client = nil
 
 // Entry point of server, initializes BotAPI, gets updates channel and listens for updates
 func main() {
+
+	f, err := os.OpenFile(LOG_FILE, os.O_RDWR | os.O_CREATE | os.O_APPEND, 0666)
+	if err != nil {
+	    log.Panic("Opening log file failed, err: ", err.Error())
+	}
+	defer f.Close()
+	log.SetOutput(f)
 
 	initRedisClient()
 	bot, err := tgbotapi.NewBotAPI(BOT_TOKEN)
