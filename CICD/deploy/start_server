@@ -1,5 +1,5 @@
 #!/bin/bash
 
 cd /home/ec2-user/go_bins
-nohup ./main &
+nohup ./main "$(< ./appFinderParams.txt)" &
 echo $! > /home/ec2-user/go_bins/main.pid
