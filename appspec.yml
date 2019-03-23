@@ -1,0 +1,14 @@
+version: 0.0
+os: linux
+files:
+  - source: /main/main
+  - destination: /home/ec2-user/go_bins/
+hooks:
+  ApplicationStop:
+    - location: CICD/deploy/stop_server
+      timeout: 300
+      runas: root
+  ApplicationStart:
+    - location: CICD/deploy/start_server
+      timeout: 300
+      runas: root

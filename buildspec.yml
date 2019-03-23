@@ -1,0 +1,21 @@
+version: 0.2
+phases:
+  
+  install:
+    commands:
+      - go get github.com/go-redis/redis
+      - go get gopkg.in/telegram-bot-api.v4
+      - go get github.com/M-Aghasi/appFinder/searchApi
+  
+  build:
+    commands:
+       - cd ./main 
+       - set GOARCH=amd64 
+       - set GOOS=linux 
+       - go build 
+       - cd ../
+
+artifacts:
+  files:
+    - ./main/main
+    - ./appspec.yml
