@@ -16,16 +16,25 @@ import (
 	"gopkg.in/telegram-bot-api.v4"
 )
 
-const LOG_FILE string = "/var/log/AppFinder_telegram_bot.log"
-const BOT_TOKEN string = "TELEGRAM_BOT_TOKEN"
 const REDIS_CACHE_EXPIRE_SECS int = 60 * 60 * 3
 
 var redisClient *redis.Client = nil
+var botToken string
+var logFile string
+var redisHost string
+var redisPassword string
 
 // Entry point of server, initializes BotAPI, gets updates channel and listens for updates
 func main() {
+	if len(os.Args) != 5 {
+		log.Panic("This service requires 4 args: 1-botToken, 2-logFile, 3-redisHost, 4-redisPassword")
+	}
+	botToken = os.Args[1]
+	logFile = os.Args[2]
+	redisHost = os.Args[3]
+	redisPassword = os.Args[4]
 
-	f, err := os.OpenFile(LOG_FILE, os.O_RDWR | os.O_CREATE | os.O_APPEND, 0666)
+	f, err := os.OpenFile(logFile, os.O_RDWR | os.O_CREATE | os.O_APPEND, 0666)
 	if err != nil {
 	    log.Panic("Opening log file failed, err: ", err.Error())
 	}
@@ -33,7 +42,7 @@ func main() {
 	log.SetOutput(f)
 
 	initRedisClient()
-	bot, err := tgbotapi.NewBotAPI(BOT_TOKEN)
+	bot, err := tgbotapi.NewBotAPI(botToken)
 	if err != nil {
 		log.Panic("AppFinder bot creation failed, err: " + err.Error())
 	}
@@ -213,8 +222,8 @@ func getHtmlOfAppInfo(appInfo searchApi.AppleSearchAppInfo) string {
 // Initializes RedisClient for caching functionalities
 func initRedisClient() {
 	redisClient = redis.NewClient(&redis.Options{
-		Addr:     "localhost:6379",
-		Password: "",
+		Addr:     redisHost,
+		Password: redisPassword,
 		DB:       0,
 	})
 
