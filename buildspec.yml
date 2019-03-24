@@ -19,4 +19,4 @@ artifacts:
   files:
     - ./main/main
     - ./appspec.yml
-    - ./CICD/*
+    - ./CICD/deploy/**
