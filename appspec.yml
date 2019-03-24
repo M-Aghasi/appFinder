@@ -2,7 +2,7 @@ version: 0.0
 os: linux
 files:
   - source: /main/main
-  - destination: /home/ec2-user/go_bins/
+    destination: /home/ec2-user/go_bins/
 hooks:
   ApplicationStop:
     - location: CICD/deploy/stop_server
