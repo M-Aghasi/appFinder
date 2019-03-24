@@ -33,6 +33,7 @@ func main() {
 	logFile = os.Args[2]
 	redisHost = os.Args[3]
 	redisPassword = os.Args[4]
+	log.Println("Args %s %s %s %s", botToken, logFile, redisHost, len(redisPassword))
 
 	f, err := os.OpenFile(logFile, os.O_RDWR | os.O_CREATE | os.O_APPEND, 0666)
 	if err != nil {
@@ -221,6 +222,13 @@ func getHtmlOfAppInfo(appInfo searchApi.AppleSearchAppInfo) string {
 
 // Initializes RedisClient for caching functionalities
 func initRedisClient() {
+	if len(redisPassword) == 0 {
+		redisClient = redis.NewClient(&redis.Options{
+			Addr:     redisHost,
+			DB:       0,
+		})
+		return
+	}
 	redisClient = redis.NewClient(&redis.Options{
 		Addr:     redisHost,
 		Password: redisPassword,
