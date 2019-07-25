@@ -1,5 +1,6 @@
 #!/bin/bash
 
 cd /home/ec2-user/go_bins
-nohup ./main "$(< ./appFinderParams.txt)" &
+mapfile -t <./appFinderParams.txt
+nohup ./main "${MAPFILE[@]}" &
 echo $! > /home/ec2-user/go_bins/main.pid
