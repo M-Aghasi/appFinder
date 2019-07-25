@@ -23,17 +23,19 @@ var botToken string
 var logFile string
 var redisHost string
 var redisPassword string
+var ignoreRedisPassword string
 
 // Entry point of server, initializes BotAPI, gets updates channel and listens for updates
 func main() {
-	if len(os.Args) != 5 {
-		log.Panic("This service requires 4 args: 1-botToken, 2-logFile, 3-redisHost, 4-redisPassword")
+	if len(os.Args) != 6 {
+		log.Panic("This service requires 4 args: 1-botToken, 2-logFile, 3-redisHost, 4-redisPassword 5-ignoreRedisPassword")
 	}
 	botToken = os.Args[1]
 	logFile = os.Args[2]
 	redisHost = os.Args[3]
 	redisPassword = os.Args[4]
-	log.Println("Args %s %s %s %s", botToken, logFile, redisHost, len(redisPassword))
+	ignoreRedisPassword = os.Args[5]
+	log.Println("Args %s %s %s %s %s", botToken, logFile, redisHost, len(redisPassword), ignoreRedisPassword)
 
 	f, err := os.OpenFile(logFile, os.O_RDWR | os.O_CREATE | os.O_APPEND, 0666)
 	if err != nil {
@@ -222,7 +224,7 @@ func getHtmlOfAppInfo(appInfo searchApi.AppleSearchAppInfo) string {
 
 // Initializes RedisClient for caching functionalities
 func initRedisClient() {
-	if len(redisPassword) == 0 {
+	if ignoreRedisPassword == "yes" {
 		redisClient = redis.NewClient(&redis.Options{
 			Addr:     redisHost,
 			DB:       0,
